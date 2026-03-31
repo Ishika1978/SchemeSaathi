@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchemeSaathi – Government Schemes Made Easy</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #FF6B00;
+    --saffron-light: #FF9A45;
+    --saffron-pale: #FFF3E8;
+    --green: #138808;
+    --green-light: #1DB510;
+    --green-pale: #E8F7E8;
+    --blue: #0047AB;
+    --blue-light: #2A6FDB;
+    --blue-pale: #E8EFFE;
+    --navy: #0D1B3E;
+    --gold: #E8A020;
+    --cream: #FFFDF7;
+    --text: #1A1A2E;
+    --muted: #6B7280;
+    --white: #FFFFFF;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.10);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+  nav {
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 60px; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .nav-logo { font-family: 'Baloo 2', cursive; font-size: 1.4rem; color: var(--white); font-weight: 800; }
+  .nav-logo span { color: var(--saffron); }
+  .nav-badge { background: var(--saffron); color: white; font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+  .simple-toggle {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 14px; border-radius: 30px; cursor: pointer; color: white;
+    font-size: 0.82rem; font-weight: 600; transition: all 0.2s;
+  }
+  .simple-toggle:hover { background: rgba(255,107,0,0.3); border-color: var(--saffron); }
+  .lang-toggle {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+    padding: 6px 14px; border-radius: 30px; cursor: pointer; color: white;
+    font-size: 0.82rem; font-weight: 700; transition: all 0.2s; font-family: 'Baloo 2', cursive;
+  }
+  .lang-toggle:hover { background: rgba(19,136,8,0.35); border-color: var(--green-light); }
+  .toggle-dot {
+    width: 36px; height: 20px; border-radius: 20px; background: #374151;
+    position: relative; transition: background 0.3s; flex-shrink: 0;
+  }
+  .toggle-dot::after {
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 14px; height: 14px; background: white; border-radius: 50%;
+    transition: transform 0.3s;
+  }
+  .toggle-dot.active { background: var(--saffron); }
+  .toggle-dot.active::after { transform: translateX(16px); }
+  .simple-mode-banner {
+    display: none; background: var(--saffron); color: white;
+    text-align: center; padding: 8px; font-size: 0.85rem; font-weight: 600;
+  }
+  .simple-mode-banner.show { display: block; }
+
+  .hero {
+    background:
+      linear-gradient(135deg, rgba(13,27,62,0.75) 0%, rgba(26,45,107,0.70) 50%, rgba(10,61,98,0.78) 100%),
+      url('https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1400&q=80') center/cover no-repeat;
+    padding: 56px 24px 48px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block; background: rgba(255,107,0,0.2); border: 1px solid var(--saffron);
+    color: var(--saffron-light); font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 5px 14px; border-radius: 30px; margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Baloo 2', cursive; font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 800;
+    color: white; line-height: 1.15; margin-bottom: 14px;
+  }
+  .hero h1 span { color: var(--saffron); }
+  .hero p { color: rgba(255,255,255,0.72); font-size: 1rem; max-width: 560px; margin: 0 auto 28px; line-height: 1.7; }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 8px;
+  }
+  .stat { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 20px; text-align: center; }
+  .stat-num { font-family: 'Baloo 2', cursive; font-size: 1.6rem; font-weight: 800; color: var(--saffron); }
+  .stat-label { font-size: 0.72rem; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+  .main-tabs {
+    display: flex; overflow-x: auto; gap: 0;
+    background: white; border-bottom: 2px solid #E5E7EB;
+    padding: 0 16px; position: sticky; top: 60px; z-index: 90;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .main-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 14px 20px; font-size: 0.88rem; font-weight: 600; white-space: nowrap;
+    border: none; background: none; cursor: pointer; color: var(--muted);
+    border-bottom: 3px solid transparent; transition: all 0.2s; margin-bottom: -2px;
+  }
+  .tab-btn.active { color: var(--saffron); border-bottom-color: var(--saffron); }
+  .tab-btn:hover:not(.active) { color: var(--text); }
+
+  .section { display: none; padding: 28px 16px 48px; max-width: 960px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  .schemes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 8px; }
+  .scheme-card {
+    background: white; border-radius: var(--radius); padding: 22px;
+    box-shadow: var(--shadow); border: 1.5px solid #F0F0F0;
+    cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden;
+  }
+  .scheme-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  }
+  .scheme-card.health::before { background: #EF4444; }
+  .scheme-card.housing::before { background: var(--green); }
+  .scheme-card.youth::before { background: var(--blue); }
+  .scheme-card.savings::before { background: #EC4899; }
+  .scheme-card.farmer::before { background: var(--green); }
+  .scheme-card.business::before { background: var(--saffron); }
+  .scheme-card.employment::before { background: #6366F1; }
+  .scheme-card.education::before { background: #0EA5E9; }
+  .scheme-card.loan::before { background: var(--saffron); }
+  .scheme-card.women::before { background: #EC4899; }
+  .scheme-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: transparent; }
+  .card-emoji { font-size: 2rem; margin-bottom: 10px; }
+  .card-tag {
+    display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; padding: 2px 8px; border-radius: 20px; margin-bottom: 8px;
+  }
+  .tag-health { background: #FEE2E2; color: #DC2626; }
+  .tag-housing { background: var(--green-pale); color: var(--green); }
+  .tag-youth { background: var(--blue-pale); color: var(--blue); }
+  .tag-savings { background: #FCE7F3; color: #BE185D; }
+  .tag-farmer { background: var(--green-pale); color: var(--green); }
+  .tag-business { background: var(--saffron-pale); color: var(--saffron); }
+  .tag-employment { background: #EEF2FF; color: #4338CA; }
+  .tag-education { background: #E0F2FE; color: #0369A1; }
+  .tag-loan { background: var(--saffron-pale); color: var(--saffron); }
+  .tag-women { background: #FCE7F3; color: #BE185D; }
+  .card-title { font-family: 'Baloo 2', cursive; font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; line-height: 1.3; }
+  .card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+  .card-desc.simple { display: none; }
+  .card-benefit {
+    background: var(--saffron-pale); border-radius: 10px; padding: 10px 12px;
+    font-size: 0.82rem; font-weight: 600; color: var(--saffron); display: flex; align-items: center; gap: 6px;
+  }
+  .card-actions { display: flex; gap: 8px; margin-top: 14px; }
+  .btn-small {
+    flex: 1; padding: 8px 10px; border-radius: 10px; border: none; cursor: pointer;
+    font-size: 0.78rem; font-weight: 600; transition: all 0.2s; font-family: inherit;
+  }
+  .btn-details { background: var(--navy); color: white; }
+  .btn-details:hover { background: var(--blue); }
+  .btn-listen { background: #F3F4F6; color: var(--text); }
+  .btn-listen:hover { background: #E5E7EB; }
+  .btn-compare-add { background: var(--green-pale); color: var(--green); }
+  .btn-compare-add:hover { background: #C6EFC6; }
+  .btn-compare-add.added { background: var(--green); color: white; }
+
+  .section-header { margin-bottom: 20px; }
+  .section-header h2 { font-family: 'Baloo 2', cursive; font-size: 1.5rem; font-weight: 800; color: var(--navy); }
+  .section-header p { font-size: 0.88rem; color: var(--muted); margin-top: 4px; }
+
+  .situation-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; margin-bottom: 28px; }
+  .situation-btn {
+    background: white; border: 2px solid #E5E7EB; border-radius: 14px;
+    padding: 16px 14px; cursor: pointer; text-align: center; transition: all 0.2s;
+    font-family: inherit;
+  }
+  .situation-btn:hover { border-color: var(--saffron); background: var(--saffron-pale); }
+  .situation-btn.active { border-color: var(--saffron); background: var(--saffron); color: white; }
+  .situation-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .situation-label { font-size: 0.82rem; font-weight: 600; color: inherit; }
+  .situation-btn.active .situation-label { color: white; }
+  .situation-result { display: none; }
+  .situation-result.show { display: block; }
+  .result-intro {
+    background: var(--green-pale); border-left: 4px solid var(--green);
+    border-radius: 10px; padding: 14px 16px; margin-bottom: 18px;
+    font-size: 0.88rem; color: var(--green); font-weight: 600;
+  }
+
+  .checker-wrap { max-width: 580px; margin: 0 auto; }
+  .checker-progress { height: 6px; background: #E5E7EB; border-radius: 6px; margin-bottom: 28px; }
+  .checker-progress-fill { height: 100%; background: var(--saffron); border-radius: 6px; transition: width 0.4s; }
+  .checker-q { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
+  .checker-q-num { font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .checker-q-text { font-family: 'Baloo 2', cursive; font-size: 1.2rem; font-weight: 700; color: var(--navy); margin-bottom: 20px; line-height: 1.4; }
+  .checker-options { display: flex; gap: 12px; }
+  .checker-opt {
+    flex: 1; padding: 14px; border-radius: 12px; border: 2px solid #E5E7EB;
+    cursor: pointer; text-align: center; font-size: 1rem; font-weight: 700;
+    transition: all 0.2s; background: white; font-family: inherit;
+  }
+  .checker-opt:hover { border-color: var(--saffron); }
+  .checker-opt.yes:hover, .checker-opt.yes.selected { background: var(--green); color: white; border-color: var(--green); }
+  .checker-opt.no:hover, .checker-opt.no.selected { background: #EF4444; color: white; border-color: #EF4444; }
+  .checker-result { display: none; background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); text-align: center; }
+  .checker-result.show { display: block; }
+  .result-emoji { font-size: 3rem; margin-bottom: 12px; }
+  .result-title { font-family: 'Baloo 2', cursive; font-size: 1.4rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .result-subtitle { font-size: 0.9rem; color: var(--muted); margin-bottom: 20px; }
+  .result-schemes-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; text-align: left; }
+  .result-scheme-item { background: var(--green-pale); border-radius: 10px; padding: 12px 14px; font-size: 0.85rem; font-weight: 600; color: var(--green); }
+  .btn-restart { background: var(--navy); color: white; border: none; border-radius: 10px; padding: 12px 28px; font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+  /* ── COMPARE SELECTOR ── */
+  .compare-selector-box {
+    background: white; border-radius: var(--radius); padding: 22px;
+    box-shadow: var(--shadow); border: 1.5px solid #F0F0F0; margin-bottom: 24px;
+  }
+  .compare-selector-box h3 {
+    font-family: 'Baloo 2', cursive; font-size: 1.05rem; font-weight: 700;
+    color: var(--navy); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .scheme-select-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+  .scheme-select-wrap { flex: 1; min-width: 200px; }
+  .scheme-select-wrap label { font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 6px; }
+  .scheme-select {
+    width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #E5E7EB;
+    font-family: inherit; font-size: 0.88rem; color: var(--text); background: white;
+    cursor: pointer; transition: border-color 0.2s; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center; padding-right: 34px;
+  }
+  .scheme-select:focus { outline: none; border-color: var(--saffron); }
+  .btn-add-compare {
+    padding: 10px 20px; background: var(--saffron); color: white; border: none;
+    border-radius: 10px; font-family: inherit; font-size: 0.88rem; font-weight: 700;
+    cursor: pointer; transition: background 0.2s; white-space: nowrap;
+  }
+  .btn-add-compare:hover { background: #E05500; }
+  .compare-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; min-height: 0; }
+  .compare-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--navy); color: white; border-radius: 20px;
+    padding: 6px 14px; font-size: 0.8rem; font-weight: 600;
+  }
+  .chip-remove {
+    background: rgba(255,255,255,0.2); border: none; color: white; cursor: pointer;
+    border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s;
+  }
+  .chip-remove:hover { background: rgba(255,107,0,0.7); }
+  .compare-hint { font-size: 0.78rem; color: var(--muted); margin-top: 10px; }
+
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 200; align-items: flex-end; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: white; border-radius: 24px 24px 0 0; width: 100%; max-width: 700px;
+    max-height: 90vh; overflow-y: auto; padding: 28px 24px 40px; position: relative;
+    animation: slideUp 0.35s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-close {
+    position: absolute; top: 16px; right: 20px; background: #F3F4F6;
+    border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer;
+    font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-emoji { font-size: 2.5rem; margin-bottom: 10px; }
+  .modal-tag { display: inline-block; margin-bottom: 8px; }
+  .modal-title { font-family: 'Baloo 2', cursive; font-size: 1.4rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+  .modal-subtitle { font-size: 0.88rem; color: var(--muted); margin-bottom: 20px; }
+  .modal-section { margin-bottom: 20px; }
+  .modal-section-title {
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+  }
+  .modal-section-title::after { content: ''; flex: 1; height: 1px; background: #E5E7EB; }
+  .modal-story {
+    background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 12px; padding: 16px;
+    font-size: 0.88rem; line-height: 1.8; color: #92400E;
+  }
+  .modal-story strong { color: #78350F; }
+  .modal-rejection { background: #FEF2F2; border-radius: 12px; padding: 16px; }
+  .rejection-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 0.85rem; }
+  .rejection-item:last-child { margin-bottom: 0; }
+  .rej-icon { color: #EF4444; font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .rej-text { color: #7F1D1D; line-height: 1.5; }
+  .modal-eligibility { display: flex; flex-direction: column; gap: 8px; }
+  .elig-item { background: var(--green-pale); border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; color: var(--green); display: flex; gap: 8px; align-items: flex-start; }
+  .modal-btns { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+  .btn-modal {
+    padding: 12px 18px; border-radius: 12px; border: none; cursor: pointer;
+    font-size: 0.85rem; font-weight: 700; transition: all 0.2s; font-family: inherit;
+    display: flex; align-items: center; gap: 6px; text-decoration: none;
+  }
+  .btn-apply { background: var(--saffron); color: white; }
+  .btn-apply:hover { background: #E05500; }
+  .btn-download { background: var(--navy); color: white; }
+  .btn-download:hover { background: #0a1630; }
+  .btn-share { background: #25D366; color: white; }
+  .btn-share:hover { background: #1da851; }
+  .btn-speak { background: #F3F4F6; color: var(--text); }
+  .btn-speak:hover { background: #E5E7EB; }
+
+  .compare-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; background: var(--navy); padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between; z-index: 150;
+    transform: translateY(100%); transition: transform 0.3s;
+  }
+  .compare-bar.show { transform: translateY(0); }
+  .compare-bar-text { color: white; font-size: 0.88rem; font-weight: 600; }
+  .compare-bar-text span { color: var(--saffron); }
+  .btn-compare-now { background: var(--saffron); color: white; border: none; border-radius: 10px; padding: 10px 20px; font-size: 0.88rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .compare-section { display: none; }
+  .compare-section.show { display: block; }
+  .compare-table { width: 100%; border-collapse: collapse; background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .compare-table th { background: var(--navy); color: white; padding: 14px 16px; font-size: 0.85rem; font-weight: 700; text-align: left; }
+  .compare-table th:first-child { background: #0D1B3E; }
+  .compare-table td { padding: 14px 16px; font-size: 0.85rem; border-bottom: 1px solid #F3F4F6; vertical-align: top; line-height: 1.5; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table td:first-child { font-weight: 700; color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; background: #FAFAFA; }
+  .compare-table tr:nth-child(even) td:not(:first-child) { background: #FAFAFA; }
+  .compare-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .btn-clear { background: #F3F4F6; border: none; border-radius: 10px; padding: 10px 16px; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .no-compare { text-align: center; padding: 48px 20px; color: var(--muted); }
+  .no-compare-icon { font-size: 3rem; margin-bottom: 12px; }
+
+  .speaking-badge {
+    display: none; position: fixed; top: 80px; right: 20px; z-index: 300;
+    background: var(--navy); color: white; padding: 10px 16px; border-radius: 30px;
+    font-size: 0.8rem; font-weight: 600; align-items: center; gap: 8px;
+    box-shadow: var(--shadow-lg);
+  }
+  .speaking-badge.show { display: flex; }
+  .sound-wave { display: flex; gap: 3px; align-items: center; }
+  .wave-bar { width: 3px; background: var(--saffron); border-radius: 3px; animation: wave 0.8s infinite; }
+  .wave-bar:nth-child(2) { animation-delay: 0.15s; height: 8px; }
+  .wave-bar:nth-child(3) { animation-delay: 0.3s; height: 14px; }
+  .wave-bar:nth-child(4) { animation-delay: 0.15s; height: 8px; }
+  .wave-bar:nth-child(1), .wave-bar:nth-child(5) { height: 5px; }
+  @keyframes wave { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.8); } }
+
+  .toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--navy); color: white; padding: 12px 20px; border-radius: 30px;
+    font-size: 0.85rem; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 400;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .modal-benefits { display: flex; flex-direction: column; gap: 8px; }
+  .benefit-item { background: #EEF2FF; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; color: #3730A3; display: flex; gap: 8px; align-items: flex-start; }
+  .benefit-item span { flex-shrink: 0; }
+  .modal-docs { display: flex; flex-direction: column; gap: 8px; }
+  .doc-item { background: #F0FDF4; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; color: #166534; display: flex; gap: 8px; align-items: flex-start; border: 1px solid #BBF7D0; }
+  .doc-item span { flex-shrink: 0; }
+
+  body.simple .card-desc:not(.simple) { display: none; }
+  body.simple .card-desc.simple { display: block; }
+  body.simple .card-title { color: var(--saffron); }
+
+  @media (max-width: 480px) {
+    .hero { padding: 40px 16px 36px; }
+    .hero-stats { gap: 12px; }
+    .checker-options { flex-direction: column; }
+    .modal-btns { flex-direction: column; }
+    .btn-modal { justify-content: center; }
+    .scheme-select-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="speaking-badge" id="speakBadge">
+  <div class="sound-wave">
+    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+    <div class="wave-bar"></div><div class="wave-bar"></div>
+  </div>
+  Listening...
+  <button onclick="stopSpeech()" style="background:rgba(255,255,255,0.2);border:none;color:white;cursor:pointer;border-radius:20px;padding:2px 8px;font-size:0.75rem;">✕ Stop</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<nav>
+  <div class="nav-logo">Scheme<span>Saathi</span><span class="nav-badge">🇮🇳</span></div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="lang-toggle" id="langToggle" onclick="toggleLang()">
+      <span id="langLabel">हिंदी</span> 🌐
+    </button>
+    <button class="simple-toggle" onclick="toggleSimple()">
+      <span id="simpleLabel">Normal Mode</span>
+      <div class="toggle-dot" id="simpleDot"></div>
+      Simple
+    </button>
+  </div>
+</nav>
+<div class="simple-mode-banner" id="simpleBanner">
+  ✅ Simple Mode ON — Schemes are now explained in very easy language!
+</div>
+
+<div class="hero">
+  <div class="hero-tag">🇮🇳 For Every Indian</div>
+  <h1>Government Schemes,<br><span>Explained Simply</span></h1>
+  <p>Find the right scheme for your life situation. No confusing forms. No government jargon. Just clear, simple help.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">10</div><div class="stat-label">Key Schemes</div></div>
+    <div class="stat"><div class="stat-num">₹5L+</div><div class="stat-label">Max Benefit</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Free to Access</div></div>
+  </div>
+</div>
+
+<div class="main-tabs">
+  <button class="tab-btn active" onclick="showTab('all')">📋 All Schemes</button>
+  <button class="tab-btn" onclick="showTab('situation')">🧭 My Situation</button>
+  <button class="tab-btn" onclick="showTab('checker')">✅ Eligibility Check</button>
+  <button class="tab-btn" onclick="showTab('compare')">⚖️ Compare</button>
+</div>
+
+<!-- ALL SCHEMES -->
+<div class="section active" id="tab-all">
+  <div class="section-header">
+    <h2>All Government Schemes</h2>
+    <p>Click any scheme to learn more, check eligibility, and apply.</p>
+  </div>
+  <div class="schemes-grid" id="schemesGrid"></div>
+</div>
+
+<!-- MY SITUATION -->
+<div class="section" id="tab-situation">
+  <div class="section-header">
+    <h2>What's Your Situation?</h2>
+    <p>Tell us your life situation and we'll show only the schemes that are right for you.</p>
+  </div>
+  <div class="situation-grid">
+    <button class="situation-btn active" onclick="filterSituation('all', this)">
+      <div class="situation-icon">🌟</div>
+      <div class="situation-label">Show All</div>
+    </button>
+    <button class="situation-btn" onclick="filterSituation('job', this)">
+      <div class="situation-icon">😟</div>
+      <div class="situation-label">I Lost My Job</div>
+    </button>
+    <button class="situation-btn" onclick="filterSituation('student', this)">
+      <div class="situation-icon">📚</div>
+      <div class="situation-label">I'm a Poor Student</div>
+    </button>
+    <button class="situation-btn" onclick="filterSituation('business', this)">
+      <div class="situation-icon">🏪</div>
+      <div class="situation-label">Starting a Business</div>
+    </button>
+    <button class="situation-btn" onclick="filterSituation('pregnant', this)">
+      <div class="situation-icon">🤰</div>
+      <div class="situation-label">I'm Pregnant</div>
+    </button>
+    <button class="situation-btn" onclick="filterSituation('farmer', this)">
+      <div class="situation-icon">🌾</div>
+      <div class="situation-label">I'm a Farmer</div>
+    </button>
+    <button class="situation-btn" onclick="filterSituation('girl', this)">
+      <div class="situation-icon">👧</div>
+      <div class="situation-label">I Have a Daughter</div>
+    </button>
+    <button class="situation-btn" onclick="filterSituation('house', this)">
+      <div class="situation-icon">🏠</div>
+      <div class="situation-label">Need a Home</div>
+    </button>
+    <button class="situation-btn" onclick="filterSituation('health', this)">
+      <div class="situation-icon">🏥</div>
+      <div class="situation-label">Need Healthcare</div>
+    </button>
+  </div>
+  <div class="situation-result" id="situationResult">
+    <div class="result-intro" id="situationMsg"></div>
+    <div class="schemes-grid" id="situationGrid"></div>
+  </div>
+</div>
+
+<!-- CHECKER -->
+<div class="section" id="tab-checker">
+  <div class="section-header">
+    <h2>Quick Eligibility Check</h2>
+    <p>Just 5 Yes/No questions — no forms, no paperwork.</p>
+  </div>
+  <div class="checker-wrap">
+    <div class="checker-progress"><div class="checker-progress-fill" id="checkerBar" style="width:0%"></div></div>
+    <div class="checker-q" id="checkerQ">
+      <div class="checker-q-num" id="qNum">Question 1 of 5</div>
+      <div class="checker-q-text" id="qText"></div>
+      <div class="checker-options">
+        <button class="checker-opt yes" onclick="answer(true)">✅ Yes</button>
+        <button class="checker-opt no" onclick="answer(false)">❌ No</button>
+      </div>
+    </div>
+    <div class="checker-result" id="checkerResult">
+      <div class="result-emoji" id="resultEmoji"></div>
+      <div class="result-title" id="resultTitle"></div>
+      <div class="result-subtitle" id="resultSub"></div>
+      <div class="result-schemes-list" id="resultSchemes"></div>
+      <button class="btn-restart" onclick="restartChecker()">🔄 Check Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARE -->
+<div class="section" id="tab-compare">
+  <div class="compare-header">
+    <div class="section-header" style="margin-bottom:0">
+      <h2>Compare Schemes</h2>
+      <p>Select up to 3 schemes to compare side-by-side.</p>
+    </div>
+    <button class="btn-clear" onclick="clearCompare()">🗑 Clear All</button>
+  </div>
+
+  <!-- NEW: Scheme Selector Box -->
+  <div class="compare-selector-box">
+    <h3>➕ Select Schemes to Compare</h3>
+    <div class="scheme-select-row">
+      <div class="scheme-select-wrap">
+        <label>Choose a scheme</label>
+        <select class="scheme-select" id="schemeDropdown">
+          <option value="">— Pick a scheme —</option>
+        </select>
+      </div>
+      <button class="btn-add-compare" onclick="addFromDropdown()">+ Add to Compare</button>
+    </div>
+    <div class="compare-chips" id="compareChips"></div>
+    <div class="compare-hint" id="compareHint">Select up to 3 schemes. You can also use "+ Compare" buttons on All Schemes cards.</div>
+  </div>
+
+  <div class="no-compare" id="noCompare">
+    <div class="no-compare-icon">⚖️</div>
+    <p style="font-weight:600;color:var(--navy);margin-bottom:6px">No schemes selected yet</p>
+    <p style="font-size:0.85rem">Use the selector above or click <strong>"+ Compare"</strong> on any scheme card</p>
+  </div>
+  <div class="compare-section" id="compareTable"></div>
+</div>
+
+<!-- Compare bar -->
+<div class="compare-bar" id="compareBar">
+  <div class="compare-bar-text">Comparing <span id="compareCount">0</span> scheme(s)</div>
+  <button class="btn-compare-now" onclick="showTab('compare')">View Comparison ⚖️</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-emoji" id="mEmoji"></div>
+    <div class="modal-tag" id="mTag"></div>
+    <div class="modal-title" id="mTitle"></div>
+    <div class="modal-subtitle" id="mSub"></div>
+    <div class="modal-section">
+      <div class="modal-section-title">📖 What is this scheme?</div>
+      <div id="mDesc" style="font-size:0.88rem;line-height:1.8;color:#374151;"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">✅ Who can apply?</div>
+      <div class="modal-eligibility" id="mElig"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">🌟 Real Story</div>
+      <div class="modal-story" id="mStory"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">🎁 Key Benefits</div>
+      <div class="modal-benefits" id="mBenefits"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">📂 Documents Required</div>
+      <div class="modal-docs" id="mDocs"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">⚠️ Why People Get Rejected</div>
+      <div class="modal-rejection" id="mRej"></div>
+    </div>
+    <div class="modal-btns">
+      <a class="btn-modal btn-apply" id="applyBtn" href="#" target="_blank" rel="noopener noreferrer">🌐 Apply Now</a>
+      <button class="btn-modal btn-speak" id="speakBtn" onclick="speakScheme()">🔊 Listen</button>
+      <button class="btn-modal btn-download" onclick="downloadPDF()">📄 Download PDF</button>
+      <button class="btn-modal btn-share" onclick="shareWhatsApp()">💬 Share on WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const schemes = [
+  {
+    id: 1, emoji: "🏥", tag: "health", tagLabel: "Healthcare",
+    title: "Ayushman Bharat – PM-JAY",
+    shortTitle: "Ayushman Bharat",
+    desc: "Provides free health insurance up to ₹5 lakh per family per year for secondary and tertiary care hospitalization at empanelled hospitals.",
+    simpleDesc: "🏥 If your family is poor, you get FREE hospital treatment up to ₹5 lakh every year. No need to pay at the hospital!",
+    benefit: "💰 ₹5 lakh health insurance per family/year",
+    applyUrl: "https://beneficiary.nha.gov.in/",
+    situations: ["health", "all"],
+    eligibility: ["Family must be listed in SECC database", "No income limit — based on deprivation criteria", "No cap on family size or age", "Valid Aadhaar card required"],
+    story: "<strong>Ramesh, a daily wage worker from Bihar,</strong> fell seriously ill and needed surgery costing ₹2 lakh. He had no savings. His family used their Ayushman card and got the full surgery done FREE at a government hospital. He is now healthy and back at work. 🙏",
+    rejections: ["Documents don't match Aadhaar", "Hospital not empanelled under scheme", "Not listed in SECC database", "Using scheme for non-covered procedures"],
+    compare: { benefit: "₹5 lakh/year insurance", who: "Poor families (SECC)", income: "No specific limit", age: "All ages", type: "Healthcare" },
+    benefits: [
+      "Free cashless treatment up to ₹5 lakh per family per year",
+      "Covers 1,500+ medical procedures including surgeries, ICU, medicines",
+      "No restriction on family size — entire family is covered",
+      "Pre-existing diseases covered from Day 1",
+      "Treatment available at 25,000+ empanelled government & private hospitals",
+      "Portability — can use card anywhere in India"
+    ],
+    documents: [
+      "Aadhaar Card (mandatory for all members)",
+      "Ration Card (for family verification)",
+      "SECC / BPL list inclusion proof (usually auto-verified)",
+      "Mobile number linked to Aadhaar",
+      "Ayushman card (generated via beneficiary.nha.gov.in or CSC center)",
+      "Hospital admission form at empanelled hospital"
+    ]
+  },
+  {
+    id: 2, emoji: "🏠", tag: "housing", tagLabel: "Housing",
+    title: "PMAY-Gramin (Rural Housing)",
+    shortTitle: "PMAY-Gramin",
+    desc: "Government provides financial assistance of ₹1.20 lakh (plains) to ₹1.30 lakh (hilly areas) to rural poor families to construct pucca houses with basic amenities.",
+    simpleDesc: "🏠 If you live in a village and don't have a pucca (solid) house, the government gives you money to build one!",
+    benefit: "🏗 ₹1.20–1.30 lakh to build a pucca house",
+    applyUrl: "https://pmayg.dord.gov.in/netiayHome/Home.aspx",
+    situations: ["house", "all"],
+    eligibility: ["Must be a rural household", "Should be houseless or living in a kutcha house", "Name should be in SECC 2011 list", "Aadhaar mandatory"],
+    story: "<strong>Sunita Devi from Madhya Pradesh</strong> had been living in a mud house for 20 years. Under PMAY-G, she received ₹1.20 lakh directly in her bank account. Within 6 months, her family had a pucca house with a toilet and electricity. She calls it her 'dream come true'. 🌟",
+    rejections: ["Name not in SECC list", "Already owns a pucca house", "Urban address in documents", "Bank account not linked to Aadhaar"],
+    compare: { benefit: "₹1.20–1.30 lakh", who: "Rural poor (SECC)", income: "Below poverty line", age: "Adults", type: "Housing" },
+    benefits: [
+      "₹1.20 lakh grant for plain areas, ₹1.30 lakh for hilly/difficult areas",
+      "Additional ₹12,000 for toilet construction under Swachh Bharat Mission",
+      "90 days of MGNREGS labour wages for self-construction assistance",
+      "Money transferred directly to bank account in instalments",
+      "Free LPG connection under Ujjwala Yojana for new house",
+      "No repayment required — it is a grant, not a loan"
+    ],
+    documents: [
+      "Aadhaar Card of all family members",
+      "Bank account passbook (linked to Aadhaar)",
+      "SECC 2011 list entry proof (verified by Gram Panchayat)",
+      "Land ownership document / Khasra-Khatauni",
+      "Job Card (MGNREGS) if applicable",
+      "Passport-size photograph",
+      "Caste certificate (if SC/ST applicant)",
+      "Mobile number for OTP and updates"
+    ]
+  },
+  {
+    id: 3, emoji: "💼", tag: "youth", tagLabel: "Youth",
+    title: "PM Internship Scheme (PMIS)",
+    shortTitle: "PM Internship",
+    desc: "Provides youth aged 21–24 with 12-month internships in top 500 Indian companies, offering ₹5,000/month stipend plus ₹6,000 one-time grant and experience certificate.",
+    simpleDesc: "💼 Are you between 21–24 years old and need work experience? Apply here! You'll work in a top company and get ₹5,000 every month!",
+    benefit: "💸 ₹5,000/month + ₹6,000 one-time grant",
+    applyUrl: "https://pminternship.mca.gov.in/login/",
+    situations: ["student", "all"],
+    eligibility: ["Age 21–24 years", "Not in full-time employment", "Educational qualification as required", "Not pursuing regular courses"],
+    story: "<strong>Priya from Nagpur</strong> couldn't get a job without experience. Through PMIS, she got a 12-month internship at a major company. She learned real skills, earned ₹5,000/month, and got a full-time job offer at the end! Her career started here. 🚀",
+    rejections: ["Already in full-time employment", "Age above 24 or below 21", "Enrolled in full-time college", "Incomplete application documents"],
+    compare: { benefit: "₹5,000/month + ₹6,000 grant", who: "Youth 21–24 yrs", income: "Not employed", age: "21–24 years", type: "Employment/Skill" },
+    benefits: [
+      "₹5,000/month stipend (₹4,500 from Govt + ₹500 from company CSR)",
+      "₹6,000 one-time joining grant for initial expenses",
+      "12-month internship in top 500 Indian companies",
+      "Accidental insurance cover of ₹10 lakh during internship",
+      "Industry-recognized experience certificate on completion",
+      "Exposure to real corporate work across 24 sectors"
+    ],
+    documents: [
+      "Aadhaar Card",
+      "10th / 12th Marksheet or ITI / Diploma / Graduation certificate",
+      "Bank account details (for stipend transfer)",
+      "Passport-size photograph",
+      "Proof of age (birth certificate or Aadhaar)",
+      "Mobile number and active email ID",
+      "No Objection Certificate if any part-time study"
+    ]
+  },
+  {
+    id: 4, emoji: "👧", tag: "savings", tagLabel: "Girl Child",
+    title: "Sukanya Samriddhi Yojana",
+    shortTitle: "Sukanya Samriddhi",
+    desc: "A savings scheme for girl children below 10 years offering high interest rates (currently ~8.2% p.a.) to help save for education and marriage expenses, with tax benefits under Section 80C.",
+    simpleDesc: "👧 Have a daughter below 10 years? Open a special savings account for her. The money grows fast with high interest and helps for her education or wedding!",
+    benefit: "📈 ~8.2% interest + tax benefits for girl's future",
+    applyUrl: "https://www.indiapost.gov.in/Financial/Pages/Content/Sukanya-Samridhi-Account.aspx",
+    situations: ["girl", "all"],
+    eligibility: ["Girl child must be below 10 years of age", "Parent/guardian can open account", "Maximum 2 accounts per family", "Account valid at any post office or bank"],
+    story: "<strong>Anand from Rajasthan</strong> opened an SSY account for his 5-year-old daughter Kavya with ₹1,000/month. By the time Kavya turns 21, she will have over ₹5 lakh saved up — enough for her college fees and a good start in life. 💕",
+    rejections: ["Girl child above 10 years at account opening", "More than 2 accounts in one family", "Account not opened at authorized branch", "KYC documents incomplete"],
+    compare: { benefit: "~8.2% p.a. interest", who: "Parents of girls < 10 yrs", income: "Any income level", age: "Girl child 0–10 yrs", type: "Savings" },
+    benefits: [
+      "High interest rate of ~8.2% p.a. (reviewed quarterly by Govt)",
+      "Tax deduction up to ₹1.5 lakh/year under Section 80C",
+      "Maturity amount completely tax-free",
+      "Partial withdrawal allowed after girl turns 18 (for education)",
+      "Minimum deposit just ₹250/year — affordable for all",
+      "Account matures when girl turns 21 — ideal for marriage/education corpus",
+      "Account transferable anywhere in India (post office or bank)"
+    ],
+    documents: [
+      "Girl child's Birth Certificate",
+      "Parent/Guardian's Aadhaar Card",
+      "Parent/Guardian's PAN Card",
+      "Address proof (Aadhaar / Voter ID / Passport / Utility Bill)",
+      "Passport-size photograph of parent and child",
+      "Initial deposit amount (minimum ₹250, maximum ₹1.5 lakh/year)"
+    ]
+  },
+  {
+    id: 5, emoji: "🌾", tag: "farmer", tagLabel: "Farmer",
+    title: "PM-KISAN (Kisan Samman Nidhi)",
+    shortTitle: "PM-KISAN",
+    desc: "Provides income support of ₹6,000 per year to all farmer families, paid in 3 equal instalments of ₹2,000 directly into their bank accounts.",
+    simpleDesc: "🌾 Are you a farmer? The government gives you ₹6,000 every year — ₹2,000 every 4 months — directly in your bank. No middleman!",
+    benefit: "💰 ₹6,000/year (₹2,000 × 3 instalments)",
+    applyUrl: "https://pmkisan.gov.in/NewFarmerRegistration.aspx",
+    situations: ["farmer", "all"],
+    eligibility: ["Must be a farmer with cultivable land", "Land records must be clear", "Aadhaar linked bank account required", "Income tax payer families excluded"],
+    story: "<strong>Mohan, a small farmer from UP,</strong> used to struggle between harvests. With PM-KISAN, ₹2,000 arrives every 4 months in his account. He used the money to buy seeds and fertilizer, and his crop yield improved. Small money, big difference! 🌱",
+    rejections: ["Aadhaar not linked to bank account", "Land records not updated", "Income tax return filed previously", "Name mismatch in documents"],
+    compare: { benefit: "₹6,000/year", who: "All farmers with land", income: "Non-income-tax payer", age: "Adult farmers", type: "Farmer Support" },
+    benefits: [
+      "₹6,000/year income support paid in 3 instalments of ₹2,000 each",
+      "Direct Bank Transfer (DBT) — no middlemen or delays",
+      "No restriction on land size — even small/marginal farmers eligible",
+      "Can be used for seeds, fertilizers, or any farming input",
+      "SMS alerts sent for every instalment credited",
+      "Portable — farmer retains benefit even if they move districts"
+    ],
+    documents: [
+      "Aadhaar Card (mandatory)",
+      "Bank account passbook (Aadhaar-linked)",
+      "Land ownership records / Khasra (Khatauni)",
+      "Mobile number (for OTP and instalment alerts)",
+      "Caste certificate (if applicable for priority processing)",
+      "Self-declaration form about non-income-taxpayer status"
+    ]
+  },
+  {
+    id: 6, emoji: "🛒", tag: "business", tagLabel: "Business",
+    title: "PM SVANidhi (Street Vendors)",
+    shortTitle: "PM SVANidhi",
+    desc: "Provides working capital loans starting at ₹10,000 (up to ₹50,000 in subsequent loans) to street vendors to restart livelihoods, with credit score-linked incentives.",
+    simpleDesc: "🛒 Are you a street vendor? You can get a loan of ₹10,000 to ₹50,000 without any guarantor to restart or grow your business!",
+    benefit: "💵 Loans ₹10,000 → ₹50,000 (no collateral)",
+    applyUrl: "https://pmsvanidhi.mohua.gov.in/Login",
+    situations: ["business", "all"],
+    eligibility: ["Must be a street vendor", "Vending certificate or letter of recommendation from ULB", "Existing vendors affected by COVID or circumstances", "Any urban area vendor"],
+    story: "<strong>Fatima sells vegetables in Hyderabad.</strong> COVID wiped out her savings. She got a ₹10,000 SVANidhi loan, repaid on time, and got ₹20,000 next. Now she has a proper vending cart, a digital payment QR code, and earns twice as much. 📲",
+    rejections: ["No vending certificate or ULB letter", "Already defaulted on previous loan", "Not a registered street vendor", "Applying without Aadhaar linkage"],
+    compare: { benefit: "Loan ₹10K–₹50K", who: "Street vendors", income: "Any", age: "Any adult", type: "Business Loan" },
+    benefits: [
+      "Working capital loan of ₹10,000 (1st loan), ₹20,000 (2nd), ₹50,000 (3rd)",
+      "No collateral or guarantor required",
+      "Interest subsidy of 7% per annum on timely repayment",
+      "₹1,200/year cashback on digital transactions (UPI/card payments)",
+      "Credit score improvement helps access formal banking",
+      "Free digital payment onboarding and training support"
+    ],
+    documents: [
+      "Aadhaar Card",
+      "Vending Certificate issued by Urban Local Body (ULB) / Municipal Corporation",
+      "OR Letter of Recommendation (LoR) from ULB / Town Vending Committee",
+      "Bank account details (savings account)",
+      "Mobile number linked to Aadhaar",
+      "Passport-size photograph",
+      "Business details (type of goods sold, vending location)"
+    ]
+  },
+  {
+    id: 7, emoji: "😟", tag: "employment", tagLabel: "Employment",
+    title: "Atal Beemit Vyakti Kalyan Yojana",
+    shortTitle: "Atal Beemit Yojana",
+    desc: "Provides financial support to Employees' State Insurance (ESIC) insured workers who lose their jobs — 50% of average daily wages for up to 90 days during unemployment.",
+    simpleDesc: "😟 If you lost your job and were paying ESIC (insurance at work), the government pays you for up to 3 months so your family doesn't suffer!",
+    benefit: "💸 50% of wages for up to 90 days",
+    applyUrl: "https://www.esic.gov.in/abvky",
+    situations: ["job", "all"],
+    eligibility: ["Must be registered with ESIC", "Insured for at least 2 years", "Rendered unemployed involuntarily", "Claim within 30 days of job loss"],
+    story: "<strong>Vijay worked at a garment factory in Surat.</strong> When the factory shut down, he lost his job. Because ESIC was deducted from his salary, he applied and received ₹8,000/month for 3 months. This helped him pay rent and find a new job peacefully. 🙌",
+    rejections: ["Left job voluntarily", "Not registered with ESIC", "Delay in filing claim (>30 days)", "Insufficient contribution period"],
+    compare: { benefit: "50% wages × 90 days", who: "ESIC insured workers", income: "Was employed", age: "Working age", type: "Unemployment Aid" },
+    benefits: [
+      "50% of average daily wages paid for up to 90 days of unemployment",
+      "No need to find a new job immediately — provides breathing room",
+      "Cash relief helps cover rent, food, and family expenses",
+      "Benefit available during retrenchment, closure, or layoffs",
+      "Claim can be filed online through ESIC portal",
+      "Enhanced relief — benefit was doubled during COVID to 50% from 25%"
+    ],
+    documents: [
+      "ESIC Insurance Number (from salary slip or ESIC card)",
+      "Aadhaar Card",
+      "Bank account passbook (for payment)",
+      "Termination / Retrenchment letter from employer",
+      "Last 6 months salary slips",
+      "Form AB-1 (application for unemployment relief) — available on ESIC portal",
+      "Mobile number registered with ESIC"
+    ]
+  },
+  {
+    id: 8, emoji: "📚", tag: "education", tagLabel: "Education",
+    title: "National Means-cum-Merit Scholarship",
+    shortTitle: "NMMSS Scholarship",
+    desc: "Provides ₹12,000/year (₹1,000/month) scholarship to economically weaker students who score well, to support continuation of studies from Class 9 onwards up to Class 12.",
+    simpleDesc: "📚 If you study well but your family doesn't have money, this scholarship gives you ₹1,000 every month so you can keep going to school!",
+    benefit: "📖 ₹12,000/year (₹1,000/month) scholarship",
+    applyUrl: "https://pfms.nic.in/SitePages/Users/LoginDetails/Login.aspx",
+    situations: ["student", "all"],
+    eligibility: ["Must have passed Class 8 with 55% marks", "Family income below ₹3.5 lakh/year", "Must appear in NMMS exam", "Students of government schools only"],
+    story: "<strong>Asha, a Class 8 student from a tribal area in Jharkhand,</strong> was going to drop out because her parents couldn't afford fees. She appeared in the NMMS exam, scored well, and got ₹1,000 every month. Now she's in Class 12, top of her class. 🌟",
+    rejections: ["Income above ₹3.5 lakh/year", "Studying in private school", "Below 55% in Class 8", "NMMS exam not appeared"],
+    compare: { benefit: "₹12,000/year", who: "Government school students", income: "Below ₹3.5 lakh/yr", age: "Class 9–12", type: "Scholarship" },
+    benefits: [
+      "₹12,000/year (₹1,000/month) scholarship for 4 years (Class 9 to 12)",
+      "Directly credited to student's bank account via PFMS",
+      "Helps cover school fees, books, transport, and stationery",
+      "Merit-based — rewards academic achievement from economically weak backgrounds",
+      "Renewable every year on passing and maintaining minimum 55% marks",
+      "Available across all states with state-level NMMS exam"
+    ],
+    documents: [
+      "Aadhaar Card of student",
+      "Class 8 Marksheet (minimum 55% required)",
+      "NMMS Exam Hall Ticket and Result/Rank letter",
+      "Family Income Certificate (below ₹3.5 lakh/year) from Tehsildar/SDM",
+      "School Enrollment Certificate from Headmaster",
+      "Bank account details (student's own account or joint with parent)",
+      "Caste certificate (if SC/ST — for relaxation in cutoff marks)",
+      "Disability certificate (if applicable)"
+    ]
+  },
+  {
+    id: 9, emoji: "🏪", tag: "loan", tagLabel: "Business Loan",
+    title: "PM Mudra Yojana (PMMY)",
+    shortTitle: "PM Mudra Loan",
+    desc: "Provides collateral-free loans up to ₹10 lakh to small businesses and entrepreneurs through banks. Three categories: Shishu (up to ₹50K), Kishore (₹50K–5L), Tarun (₹5L–10L).",
+    simpleDesc: "🏪 Want to start or grow a small business? Get a loan up to ₹10 lakh from the bank — NO guarantor needed, NO property mortgage!",
+    benefit: "💰 Loans up to ₹10 lakh (no collateral)",
+    applyUrl: "https://www.jansamarth.in/business-loan-pradhan-mantri-mudra-yojana-scheme",
+    situations: ["business", "all"],
+    eligibility: ["Non-corporate, non-farm small/micro enterprises", "Business must be in manufacturing, trading or services", "Apply at any bank or MFI", "Basic KYC and business plan required"],
+    story: "<strong>Geeta from Chennai</strong> wanted to start a small tailoring unit. She had skills but no money. Under PMMY Shishu, she got a ₹40,000 loan, bought a sewing machine, built her clientele, and now earns ₹15,000/month. She repaid the loan in 2 years. ✂️",
+    rejections: ["No basic business plan", "Poor credit history / CIBIL score", "Business in agriculture sector (not covered)", "Incomplete KYC documents"],
+    compare: { benefit: "Loan up to ₹10 lakh", who: "Small business owners", income: "Any", age: "Any adult", type: "Business Loan" },
+    benefits: [
+      "Collateral-free loans: Shishu (up to ₹50,000), Kishore (₹50K–5L), Tarun (₹5L–10L)",
+      "No processing fee charged for Shishu category loans",
+      "Lower interest rates than informal moneylenders",
+      "Mudra Card provided — works like a debit card for business expenses",
+      "Helps build formal credit history for future larger loans",
+      "Available across banks, NBFCs, MFIs and Small Finance Banks"
+    ],
+    documents: [
+      "Aadhaar Card and PAN Card",
+      "Address proof (Aadhaar / Voter ID / Utility Bill)",
+      "Business proof / Registration (if any) or self-declaration",
+      "Bank account statements (last 6 months)",
+      "Passport-size photographs (2)",
+      "Business plan / loan purpose statement",
+      "Quotation for equipment/machinery (if purchasing assets)",
+      "Caste certificate for SC/ST/OBC (for priority processing)"
+    ]
+  },
+  {
+    id: 10, emoji: "🤰", tag: "women", tagLabel: "Women",
+    title: "PM Matru Vandana Yojana (PMMVY)",
+    shortTitle: "PM Matru Vandana",
+    desc: "Provides ₹5,000 cash incentive to pregnant and lactating women for the first live birth, in three instalments, to compensate for wage loss and ensure proper nutrition and healthcare.",
+    simpleDesc: "🤰 Are you pregnant for the first time? The government gives you ₹5,000 in your bank so you can eat well and take care of your health and baby!",
+    benefit: "💸 ₹5,000 cash (3 instalments) for first pregnancy",
+    applyUrl: "https://pmmvy.wcd.gov.in/",
+    situations: ["pregnant", "all"],
+    eligibility: ["First live birth (or 2nd if girl child — new rules)", "Woman above 19 years of age", "Registered at government health facility (AWC/ASHA)", "Aadhaar and bank account required"],
+    story: "<strong>Lakshmi from Telangana</strong> was worried about medical expenses during pregnancy. After registering at her anganwadi, she received the ₹5,000 in instalments. She used it for checkups, iron tablets, and good food. Her baby was born healthy! 👶",
+    rejections: ["Not first pregnancy (some cases)", "Not registered at Anganwadi/health center", "Missing Aadhaar or bank account", "Delayed registration after pregnancy announcement"],
+    compare: { benefit: "₹5,000 (3 instalments)", who: "First-time pregnant women", income: "Any", age: "Above 19 years", type: "Women Welfare" },
+    benefits: [
+      "₹5,000 cash transferred in 3 instalments directly to bank account",
+      "1st instalment ₹1,000 on early registration of pregnancy at AWC/health centre",
+      "2nd instalment ₹2,000 after at least one ante-natal check-up",
+      "3rd instalment ₹2,000 after child birth registration and first vaccination",
+      "Additional ₹6,000 under Janani Suraksha Yojana for institutional delivery",
+      "Compensates for wage loss and ensures proper nutrition during pregnancy"
+    ],
+    documents: [
+      "Aadhaar Card of the mother",
+      "Aadhaar Card of husband (if available)",
+      "MCP Card (Mother and Child Protection Card) from Anganwadi",
+      "Bank account passbook (in the mother's name)",
+      "Pregnancy registration proof from AWC/ASHA/health facility",
+      "Ante-natal check-up record (ANC slip) for 2nd instalment",
+      "Child birth certificate and vaccination proof for 3rd instalment",
+      "Mobile number for OTP verification"
+    ]
+  }
+];
+
+const situations = {
+  all: { msg: "", label: "" },
+  job: { msg: "📌 For job loss situations — here are schemes that can help you during unemployment:", ids: [7] },
+  student: { msg: "📌 For students from poor families — these schemes support your education journey:", ids: [3, 8] },
+  business: { msg: "📌 For starting or growing a business — these schemes provide capital and support:", ids: [6, 9] },
+  pregnant: { msg: "📌 For pregnant women — this scheme provides financial and nutrition support:", ids: [10] },
+  farmer: { msg: "📌 For farmers — these schemes provide income support and help:", ids: [5] },
+  girl: { msg: "📌 For parents of girl children — save for your daughter's bright future:", ids: [4] },
+  house: { msg: "📌 For those needing a home — this scheme helps rural families build pucca houses:", ids: [2] },
+  health: { msg: "📌 For healthcare needs — free health insurance for eligible families:", ids: [1] }
+};
+
+const checkerQuestions = [
+  { q: "Are you above 18 years old?", key: "adult" },
+  { q: "Do you have an Aadhaar card?", key: "aadhaar" },
+  { q: "Is your family's annual income below ₹3.5 lakh?", key: "lowincome" },
+  { q: "Do you have a bank account linked to Aadhaar?", key: "banklink" },
+  { q: "Are you a farmer, street vendor, or self-employed person?", key: "selfemployed" }
+];
+
+let currentScheme = null;
+let simpleMode = false;
+let compareList = [];
+let checkerAnswers = {};
+let currentQ = 0;
+let speechUtterance = null;
+let lang = 'en';
+
+const t = {
+  en: {
+    normalMode: 'Normal Mode', simpleMode: 'Simple Mode',
+    simpleBanner: '✅ Simple Mode ON — Schemes are now explained in very easy language!',
+    langLabel: 'हिंदी',
+    heroTag: '🇮🇳 For Every Indian',
+    heroH1: 'Government Schemes,<br><span>Explained Simply</span>',
+    heroP: 'Find the right scheme for your life situation. No confusing forms. No government jargon. Just clear, simple help.',
+    statSchemes: 'Key Schemes', statBenefit: 'Max Benefit', statFree: 'Free to Access',
+    tabAll: '📋 All Schemes', tabSituation: '🧭 My Situation', tabChecker: '✅ Eligibility Check', tabCompare: '⚖️ Compare',
+    allH2: 'All Government Schemes', allP: 'Click any scheme to learn more, check eligibility, and apply.',
+    sitH2: "What's Your Situation?", sitP: "Tell us your life situation and we'll show only the schemes that are right for you.",
+    sitAll:'Show All', sitJob:'I Lost My Job', sitStudent:"I'm a Poor Student", sitBusiness:'Starting a Business',
+    sitPreg:"I'm Pregnant", sitFarmer:"I'm a Farmer", sitGirl:'I Have a Daughter', sitHouse:'Need a Home', sitHealth:'Need Healthcare',
+    checkerH2:'Quick Eligibility Check', checkerP:'Just 5 Yes/No questions — no forms, no paperwork.',
+    yes:'✅ Yes', no:'❌ No', checkAgain:'🔄 Check Again',
+    compareH2:'Compare Schemes', compareP:'Select up to 3 schemes to compare side-by-side.',
+    clearAll:'🗑 Clear All', noCompTitle:'No schemes selected yet',
+    noCompSub:'Use the selector above or click <strong>"+ Compare"</strong> on any scheme card',
+    comparingText:'Comparing', comparingSchemes:'scheme(s)',
+    viewComp:'View Comparison ⚖️',
+    modalWhat:'📖 What is this scheme?', modalWho:'✅ Who can apply?', modalStory:'🌟 Real Story',
+    modalWhy:'⚠️ Why People Get Rejected',
+    applyNow:'🌐 Apply Now', listen:'🔊 Listen', downloadPDF:'📄 Download PDF', shareWA:'💬 Share on WhatsApp',
+    addCompare:'+ Compare', added:'✅ Added',
+    questions:[
+      'Are you above 18 years old?','Do you have an Aadhaar card?',
+      "Is your family's annual income below ₹3.5 lakh?",'Do you have a bank account linked to Aadhaar?',
+      'Are you a farmer, street vendor, or self-employed person?'
+    ],
+    questionOf: (c,t) => `Question ${c} of ${t}`,
+    greatNews: (n) => `Great News! You may qualify for ${n} schemes!`,
+    greatSub: 'Based on your answers, these schemes could help you:',
+    someNews: (n) => `You may qualify for ${n} scheme(s)`,
+    someSub: 'Here are the schemes that may apply to you:',
+    noMatch: 'Limited matches found',
+    noMatchSub: 'Try exploring all schemes or check back with updated documents.',
+    situations: {
+      job: '📌 For job loss situations — here are schemes that can help you during unemployment:',
+      student: '📌 For students from poor families — these schemes support your education journey:',
+      business: '📌 For starting or growing a business — these schemes provide capital and support:',
+      pregnant: '📌 For pregnant women — this scheme provides financial and nutrition support:',
+      farmer: '📌 For farmers — these schemes provide income support and help:',
+      girl: "📌 For parents of girl children — save for your daughter's bright future:",
+      house: '📌 For those needing a home — this scheme helps rural families build pucca houses:',
+      health: '📌 For healthcare needs — free health insurance for eligible families:'
+    },
+    compareFeatures: ['Type','Main Benefit','Who Can Apply','Income Criteria','Age Criteria'],
+    selectScheme: 'Choose a scheme',
+    addToCompare: '+ Add to Compare',
+    compareHint: 'Select up to 3 schemes. You can also use "+ Compare" buttons on All Schemes cards.',
+    maxCompare: 'Max 3 schemes can be compared',
+    alreadyAdded: 'This scheme is already in the comparison!',
+    pickFirst: 'Please select a scheme from the dropdown first.',
+  },
+  hi: {
+    normalMode: 'सामान्य मोड', simpleMode: 'सरल मोड',
+    simpleBanner: '✅ सरल मोड चालू है — अब योजनाएँ बहुत आसान भाषा में समझाई जाएंगी!',
+    langLabel: 'English',
+    heroTag: '🇮🇳 हर भारतीय के लिए',
+    heroH1: 'सरकारी योजनाएँ,<br><span>आसान भाषा में</span>',
+    heroP: 'अपनी जीवन स्थिति के अनुसार सही योजना खोजें। कोई जटिल फॉर्म नहीं। कोई सरकारी भाषा नहीं। बस सरल और स्पष्ट मदद।',
+    statSchemes: 'प्रमुख योजनाएँ', statBenefit: 'अधिकतम लाभ', statFree: 'बिल्कुल मुफ़्त',
+    tabAll: '📋 सभी योजनाएँ', tabSituation: '🧭 मेरी स्थिति', tabChecker: '✅ पात्रता जाँच', tabCompare: '⚖️ तुलना करें',
+    allH2: 'सभी सरकारी योजनाएँ', allP: 'अधिक जानकारी के लिए किसी भी योजना पर क्लिक करें।',
+    sitH2: 'आपकी स्थिति क्या है?', sitP: 'अपनी जीवन स्थिति बताएं और हम आपके लिए सही योजनाएँ दिखाएंगे।',
+    sitAll:'सभी दिखाएं', sitJob:'नौकरी चली गई', sitStudent:'मैं गरीब छात्र हूँ', sitBusiness:'व्यापार शुरू करना है',
+    sitPreg:'मैं गर्भवती हूँ', sitFarmer:'मैं किसान हूँ', sitGirl:'मेरी बेटी है', sitHouse:'घर चाहिए', sitHealth:'इलाज चाहिए',
+    checkerH2:'त्वरित पात्रता जाँच', checkerP:'केवल 5 हाँ/नहीं प्रश्न — कोई फॉर्म नहीं, कोई कागज़ात नहीं।',
+    yes:'✅ हाँ', no:'❌ नहीं', checkAgain:'🔄 फिर से जाँचें',
+    compareH2:'योजनाओं की तुलना', compareP:'तुलना के लिए 3 तक योजनाएँ चुनें।',
+    clearAll:'🗑 सब हटाएं', noCompTitle:'अभी कोई योजना नहीं चुनी गई',
+    noCompSub:'ऊपर दिए सेलेक्टर का उपयोग करें या <strong>"+ तुलना"</strong> पर क्लिक करें',
+    comparingText:'तुलना हो रही है', comparingSchemes:'योजना(एँ)',
+    viewComp:'तुलना देखें ⚖️',
+    modalWhat:'📖 यह योजना क्या है?', modalWho:'✅ कौन आवेदन कर सकता है?', modalStory:'🌟 सच्ची कहानी',
+    modalWhy:'⚠️ लोग क्यों अस्वीकार होते हैं',
+    applyNow:'🌐 अभी आवेदन करें', listen:'🔊 सुनें', downloadPDF:'📄 PDF डाउनलोड करें', shareWA:'💬 WhatsApp पर शेयर करें',
+    addCompare:'+ तुलना करें', added:'✅ जोड़ा गया',
+    questions:[
+      'क्या आपकी उम्र 18 वर्ष से अधिक है?','क्या आपके पास आधार कार्ड है?',
+      'क्या आपके परिवार की वार्षिक आय ₹3.5 लाख से कम है?','क्या आपका बैंक खाता आधार से जुड़ा है?',
+      'क्या आप किसान, फेरीवाले या स्वरोज़गार व्यक्ति हैं?'
+    ],
+    questionOf: (c,tot) => `प्रश्न ${c} / ${tot}`,
+    greatNews: (n) => `बहुत अच्छा! आप ${n} योजनाओं के लिए पात्र हो सकते हैं!`,
+    greatSub: 'आपके जवाबों के अनुसार, ये योजनाएँ आपकी मदद कर सकती हैं:',
+    someNews: (n) => `आप ${n} योजना(ओं) के लिए पात्र हो सकते हैं`,
+    someSub: 'ये योजनाएँ आप पर लागू हो सकती हैं:',
+    noMatch: 'सीमित परिणाम मिले',
+    noMatchSub: 'सभी योजनाएँ देखें या अपने दस्तावेज़ अपडेट करके दोबारा जाँचें।',
+    situations: {
+      job: '📌 नौकरी जाने की स्थिति में — ये योजनाएँ बेरोज़गारी में मदद कर सकती हैं:',
+      student: '📌 गरीब छात्रों के लिए — ये योजनाएँ आपकी पढ़ाई में सहायता करती हैं:',
+      business: '📌 व्यापार शुरू या बढ़ाने के लिए — ये योजनाएँ पूंजी और सहायता देती हैं:',
+      pregnant: '📌 गर्भवती महिलाओं के लिए — यह योजना आर्थिक और पोषण सहायता देती है:',
+      farmer: '📌 किसानों के लिए — ये योजनाएँ आय सहायता और मदद देती हैं:',
+      girl: '📌 बेटी के माता-पिता के लिए — अपनी बेटी के उज्जवल भविष्य के लिए बचत करें:',
+      house: '📌 घर की जरूरत है — यह योजना ग्रामीण परिवारों को पक्का घर बनाने में मदद करती है:',
+      health: '📌 स्वास्थ्य सेवाओं के लिए — पात्र परिवारों को मुफ्त स्वास्थ्य बीमा:'
+    },
+    compareFeatures: ['प्रकार','मुख्य लाभ','कौन आवेदन करे','आय मानदंड','आयु मानदंड'],
+    selectScheme: 'योजना चुनें',
+    addToCompare: '+ तुलना में जोड़ें',
+    compareHint: '3 तक योजनाएँ चुनें। आप "सभी योजनाएँ" कार्ड पर भी "+ तुलना" का उपयोग कर सकते हैं।',
+    maxCompare: 'अधिकतम 3 योजनाएँ तुलना में जोड़ी जा सकती हैं',
+    alreadyAdded: 'यह योजना पहले से तुलना में है!',
+    pickFirst: 'कृपया पहले ड्रॉपडाउन से एक योजना चुनें।',
+  }
+};
+
+function populateDropdown() {
+  const dd = document.getElementById('schemeDropdown');
+  dd.innerHTML = `<option value="">— ${t[lang].selectScheme} —</option>` +
+    schemes.map(s => `<option value="${s.id}">${s.emoji} ${s.title}</option>`).join('');
+}
+
+function addFromDropdown() {
+  const tx = t[lang];
+  const dd = document.getElementById('schemeDropdown');
+  const id = parseInt(dd.value);
+  if (!id) { showToast(tx.pickFirst); return; }
+  if (compareList.includes(id)) { showToast(tx.alreadyAdded); return; }
+  if (compareList.length >= 3) { showToast(tx.maxCompare); return; }
+  compareList.push(id);
+  dd.value = '';
+  updateCompareUI();
+  renderCompare();
+}
+
+function updateCompareChips() {
+  const tx = t[lang];
+  const chips = document.getElementById('compareChips');
+  if (compareList.length === 0) { chips.innerHTML = ''; return; }
+  chips.innerHTML = compareList.map(id => {
+    const s = schemes.find(x => x.id === id);
+    return `<div class="compare-chip">${s.emoji} ${s.shortTitle}<button class="chip-remove" onclick="removeFromCompare(${id})" title="Remove">✕</button></div>`;
+  }).join('');
+}
+
+function removeFromCompare(id) {
+  compareList = compareList.filter(x => x !== id);
+  updateCompareUI();
+  renderCompare();
+}
+
+function updateCompareUI() {
+  updateCompareChips();
+  const bar = document.getElementById('compareBar');
+  bar.classList.toggle('show', compareList.length > 0);
+  document.getElementById('compareCount').textContent = compareList.length;
+  document.querySelectorAll('.btn-compare-add').forEach(btn => {
+    const id = parseInt(btn.id.replace('cmp-',''));
+    const isAdded = compareList.includes(id);
+    btn.textContent = isAdded ? t[lang].added : t[lang].addCompare;
+    btn.classList.toggle('added', isAdded);
+  });
+}
+
+function toggleLang() {
+  lang = lang === 'en' ? 'hi' : 'en';
+  applyLang();
+}
+
+function applyLang() {
+  const tx = t[lang];
+  document.getElementById('langLabel').textContent = tx.langLabel;
+  document.getElementById('simpleLabel').textContent = simpleMode ? tx.simpleMode : tx.normalMode;
+  document.getElementById('simpleBanner').textContent = tx.simpleBanner;
+  document.querySelector('.hero-tag').textContent = tx.heroTag;
+  document.querySelector('.hero h1').innerHTML = tx.heroH1;
+  document.querySelector('.hero p').textContent = tx.heroP;
+  document.querySelectorAll('.stat-label')[0].textContent = tx.statSchemes;
+  document.querySelectorAll('.stat-label')[1].textContent = tx.statBenefit;
+  document.querySelectorAll('.stat-label')[2].textContent = tx.statFree;
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  tabBtns[0].textContent = tx.tabAll;
+  tabBtns[1].textContent = tx.tabSituation;
+  tabBtns[2].textContent = tx.tabChecker;
+  tabBtns[3].textContent = tx.tabCompare;
+  document.querySelector('#tab-all .section-header h2').textContent = tx.allH2;
+  document.querySelector('#tab-all .section-header p').textContent = tx.allP;
+  document.querySelector('#tab-situation .section-header h2').textContent = tx.sitH2;
+  document.querySelector('#tab-situation .section-header p').textContent = tx.sitP;
+  const sitBtns = document.querySelectorAll('.situation-btn .situation-label');
+  const sitKeys = ['sitAll','sitJob','sitStudent','sitBusiness','sitPreg','sitFarmer','sitGirl','sitHouse','sitHealth'];
+  sitBtns.forEach((el,i) => { if(tx[sitKeys[i]]) el.textContent = tx[sitKeys[i]]; });
+  document.querySelector('#tab-checker .section-header h2').textContent = tx.checkerH2;
+  document.querySelector('#tab-checker .section-header p').textContent = tx.checkerP;
+  document.querySelectorAll('.checker-opt')[0].textContent = tx.yes;
+  document.querySelectorAll('.checker-opt')[1].textContent = tx.no;
+  document.querySelector('.btn-restart').textContent = tx.checkAgain;
+  document.querySelector('#tab-compare .section-header h2').textContent = tx.compareH2;
+  document.querySelector('#tab-compare .section-header p').textContent = tx.compareP;
+  document.querySelector('.btn-clear').textContent = tx.clearAll;
+  document.querySelector('#noCompare p:first-of-type').textContent = tx.noCompTitle;
+  document.querySelector('#noCompare p:last-of-type').innerHTML = tx.noCompSub;
+  document.getElementById('compareHint').textContent = tx.compareHint;
+  document.querySelector('.compare-bar-text').innerHTML = `${tx.comparingText} <span id="compareCount">${compareList.length}</span> ${tx.comparingSchemes}`;
+  document.querySelector('.btn-compare-now').textContent = tx.viewComp;
+  document.querySelectorAll('.modal-section-title')[0].textContent = tx.modalWhat;
+  document.querySelectorAll('.modal-section-title')[1].textContent = tx.modalWho;
+  document.querySelectorAll('.modal-section-title')[2].textContent = tx.modalStory;
+  document.querySelectorAll('.modal-section-title')[3].textContent = tx.modalBenefits || '🎁 Key Benefits';
+  document.querySelectorAll('.modal-section-title')[4].textContent = tx.modalDocs || '📂 Documents Required';
+  document.querySelectorAll('.modal-section-title')[5].textContent = tx.modalWhy;
+  document.querySelector('.btn-apply').textContent = tx.applyNow;
+  document.querySelector('.btn-speak').innerHTML = tx.listen;
+  document.querySelector('.btn-download').textContent = tx.downloadPDF;
+  document.querySelector('.btn-share').textContent = tx.shareWA;
+  populateDropdown();
+  updateCompareChips();
+  renderSchemeCards(document.getElementById('schemesGrid'), schemes);
+  const sitResult = document.getElementById('situationResult');
+  if (sitResult.classList.contains('show')) {
+    const activeBtn = document.querySelector('.situation-btn.active');
+    if (activeBtn) {
+      const onclickAttr = activeBtn.getAttribute('onclick');
+      const match = onclickAttr && onclickAttr.match(/filterSituation\('(\w+)'/);
+      if (match) filterSituation(match[1], activeBtn);
+    }
+  }
+  if (document.getElementById('checkerQ').style.display !== 'none') showQ();
+}
+
+function init() {
+  renderSchemeCards(document.getElementById('schemesGrid'), schemes);
+  populateDropdown();
+}
+
+function renderSchemeCards(container, list) {
+  const tx = t[lang];
+  container.innerHTML = list.map(s => `
+    <div class="scheme-card ${s.tag}" onclick="openModal(${s.id})">
+      <div class="card-emoji">${s.emoji}</div>
+      <div class="card-tag tag-${s.tag}">${s.tagLabel}</div>
+      <div class="card-title">${s.title}</div>
+      <div class="card-desc">${s.desc}</div>
+      <div class="card-desc simple">${s.simpleDesc}</div>
+      <div class="card-benefit">${s.benefit}</div>
+      <div class="card-actions" onclick="event.stopPropagation()">
+        <button class="btn-small btn-details" onclick="openModal(${s.id})">📋 Details</button>
+        <button class="btn-small btn-listen" onclick="speakById(${s.id})">🔊 Listen</button>
+        <button class="btn-small btn-compare-add ${compareList.includes(s.id)?'added':''}" id="cmp-${s.id}" onclick="toggleCompare(${s.id})">${compareList.includes(s.id) ? tx.added : tx.addCompare}</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  const tabs = ['all','situation','checker','compare'];
+  const idx = tabs.indexOf(name);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  if (name === 'compare') renderCompare();
+  if (name === 'checker') startChecker();
+}
+
+function filterSituation(key, btn) {
+  document.querySelectorAll('.situation-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const res = document.getElementById('situationResult');
+  const grid = document.getElementById('situationGrid');
+  const msg = document.getElementById('situationMsg');
+  if (key === 'all') { res.classList.remove('show'); return; }
+  res.classList.add('show');
+  const sit = situations[key];
+  msg.textContent = t[lang].situations[key] || sit.msg;
+  const filtered = schemes.filter(s => sit.ids.includes(s.id));
+  renderSchemeCards(grid, filtered);
+}
+
+function openModal(id) {
+  const s = schemes.find(x => x.id === id);
+  currentScheme = s;
+  document.getElementById('mEmoji').textContent = s.emoji;
+  document.getElementById('mTag').innerHTML = `<span class="card-tag tag-${s.tag}">${s.tagLabel}</span>`;
+  document.getElementById('mTitle').textContent = s.title;
+  document.getElementById('mSub').textContent = simpleMode ? '' : s.benefit;
+  document.getElementById('mDesc').textContent = simpleMode ? s.simpleDesc.replace(/[🏥🏠💼👧🌾🛒😟📚🏪🤰]/g,'') : s.desc;
+  document.getElementById('mElig').innerHTML = s.eligibility.map(e => `<div class="elig-item"><span>✅</span> ${e}</div>`).join('');
+  document.getElementById('mStory').innerHTML = s.story;
+  document.getElementById('mRej').innerHTML = s.rejections.map(r => `<div class="rejection-item"><span class="rej-icon">⚠️</span><span class="rej-text">${r}</span></div>`).join('');
+  document.getElementById('mBenefits').innerHTML = (s.benefits || []).map(b => `<div class="benefit-item"><span>🌟</span> ${b}</div>`).join('');
+  document.getElementById('mDocs').innerHTML = (s.documents || []).map(d => `<div class="doc-item"><span>📄</span> ${d}</div>`).join('');
+  // Set the official apply URL
+  const applyBtn = document.getElementById('applyBtn');
+  applyBtn.href = s.applyUrl;
+  applyBtn.textContent = t[lang].applyNow;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('show');
+    stopSpeech();
+  }
+}
+
+function toggleSimple() {
+  simpleMode = !simpleMode;
+  const tx = t[lang];
+  document.body.classList.toggle('simple', simpleMode);
+  document.getElementById('simpleDot').classList.toggle('active', simpleMode);
+  document.getElementById('simpleLabel').textContent = simpleMode ? tx.simpleMode : tx.normalMode;
+  document.getElementById('simpleBanner').classList.toggle('show', simpleMode);
+  renderSchemeCards(document.getElementById('schemesGrid'), schemes);
+}
+
+function speakById(id) {
+  const s = schemes.find(x => x.id === id);
+  if (!s) return;
+  const clean = s.title + '. ' + s.simpleDesc.replace(/[^\w\s₹,.\-!?]/g, '') + '. Benefit: ' + s.benefit.replace(/[^\w\s₹,.\-!?]/g, '');
+  speakText(clean);
+}
+
+function speakText(text) {
+  stopSpeech();
+  if (!window.speechSynthesis) { showToast('Voice not supported in this browser'); return; }
+  speechUtterance = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g,''));
+  speechUtterance.lang = 'en-IN';
+  speechUtterance.rate = 0.88;
+  speechUtterance.onend = () => document.getElementById('speakBadge').classList.remove('show');
+  speechSynthesis.speak(speechUtterance);
+  document.getElementById('speakBadge').classList.add('show');
+}
+
+function speakScheme() {
+  if (!currentScheme) return;
+  const text = `${currentScheme.title}. ${currentScheme.simpleDesc.replace(/[🏥🏠💼👧🌾🛒😟📚🏪🤰📈💰💸📖💵💸]/g, '')}. Benefit: ${currentScheme.benefit.replace(/[💰💸📈📖💵]/g,'')}`;
+  speakText(text);
+}
+
+function stopSpeech() {
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  document.getElementById('speakBadge').classList.remove('show');
+}
+
+function toggleCompare(id) {
+  const tx = t[lang];
+  if (compareList.includes(id)) {
+    compareList = compareList.filter(x => x !== id);
+  } else {
+    if (compareList.length >= 3) { showToast(tx.maxCompare); return; }
+    compareList.push(id);
+  }
+  updateCompareUI();
+}
+
+function clearCompare() {
+  compareList = [];
+  updateCompareUI();
+  renderCompare();
+}
+
+function renderCompare() {
+  const wrap = document.getElementById('compareTable');
+  const noComp = document.getElementById('noCompare');
+  if (compareList.length === 0) { wrap.classList.remove('show'); noComp.style.display = 'block'; return; }
+  noComp.style.display = 'none';
+  wrap.classList.add('show');
+  const selected = compareList.map(id => schemes.find(s => s.id === id));
+  const rows = [
+    [t[lang].compareFeatures[0], s => s.compare.type],
+    [t[lang].compareFeatures[1], s => s.compare.benefit],
+    [t[lang].compareFeatures[2], s => s.compare.who],
+    [t[lang].compareFeatures[3], s => s.compare.income],
+    [t[lang].compareFeatures[4], s => s.compare.age],
+  ];
+  wrap.innerHTML = `<table class="compare-table">
+    <tr>
+      <th>Feature</th>
+      ${selected.map(s => `<th>${s.emoji} ${s.shortTitle}</th>`).join('')}
+    </tr>
+    ${rows.map(([label, fn]) => `
+      <tr>
+        <td>${label}</td>
+        ${selected.map(s => `<td>${fn(s)}</td>`).join('')}
+      </tr>
+    `).join('')}
+    <tr>
+      <td>Apply</td>
+      ${selected.map(s => `<td><a href="${s.applyUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:var(--saffron);color:white;padding:6px 14px;border-radius:8px;font-size:0.78rem;font-weight:700;text-decoration:none;">🌐 Apply</a></td>`).join('')}
+    </tr>
+  </table>`;
+}
+
+function startChecker() {
+  currentQ = 0; checkerAnswers = {};
+  document.getElementById('checkerResult').classList.remove('show');
+  document.getElementById('checkerQ').style.display = 'block';
+  showQ();
+}
+
+function showQ() {
+  const tx = t[lang];
+  document.getElementById('qNum').textContent = tx.questionOf(currentQ + 1, checkerQuestions.length);
+  document.getElementById('qText').textContent = tx.questions[currentQ];
+  document.getElementById('checkerBar').style.width = ((currentQ / checkerQuestions.length) * 100) + '%';
+  document.querySelectorAll('.checker-opt')[0].textContent = tx.yes;
+  document.querySelectorAll('.checker-opt')[1].textContent = tx.no;
+  document.querySelectorAll('.checker-opt').forEach(o => o.classList.remove('selected'));
+}
+
+function answer(val) {
+  checkerAnswers[checkerQuestions[currentQ].key] = val;
+  currentQ++;
+  if (currentQ < checkerQuestions.length) { showQ(); }
+  else { showCheckerResult(); }
+}
+
+function showCheckerResult() {
+  document.getElementById('checkerQ').style.display = 'none';
+  document.getElementById('checkerBar').style.width = '100%';
+  const r = document.getElementById('checkerResult');
+  r.classList.add('show');
+  const tx = t[lang];
+  let eligible = [];
+  const a = checkerAnswers;
+  if (a.adult && a.aadhaar) eligible.push(schemes[0]);
+  if (a.adult && a.aadhaar && !a.selfemployed) eligible.push(schemes[1]);
+  if (a.adult && !a.selfemployed) eligible.push(schemes[2]);
+  if (a.adult && a.lowincome) eligible.push(schemes[7]);
+  if (a.adult && a.banklink && a.selfemployed) eligible.push(schemes[8], schemes[5]);
+  if (a.adult && a.banklink && a.lowincome) eligible.push(schemes[4]);
+  eligible = [...new Set(eligible)].slice(0, 4);
+  if (eligible.length >= 3) {
+    document.getElementById('resultEmoji').textContent = '🎉';
+    document.getElementById('resultTitle').textContent = tx.greatNews(eligible.length);
+    document.getElementById('resultSub').textContent = tx.greatSub;
+  } else if (eligible.length > 0) {
+    document.getElementById('resultEmoji').textContent = '✅';
+    document.getElementById('resultTitle').textContent = tx.someNews(eligible.length);
+    document.getElementById('resultSub').textContent = tx.someSub;
+  } else {
+    document.getElementById('resultEmoji').textContent = '🔍';
+    document.getElementById('resultTitle').textContent = tx.noMatch;
+    document.getElementById('resultSub').textContent = tx.noMatchSub;
+    eligible = schemes.slice(0, 2);
+  }
+  document.getElementById('resultSchemes').innerHTML = eligible.map(s =>
+    `<div class="result-scheme-item" onclick="openModal(${s.id})" style="cursor:pointer">${s.emoji} ${s.title} — ${s.benefit}</div>`
+  ).join('');
+}
+
+function restartChecker() { startChecker(); }
+
+function showToast(msg) {
+  const toastEl = document.getElementById('toast');
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  setTimeout(() => toastEl.classList.remove('show'), 2500);
+}
+
+function downloadPDF() {
+  if (!currentScheme) return;
+  const s = currentScheme;
+  const content = `SCHEME GUIDE – ${s.title}\n${'='.repeat(50)}\n\nBENEFIT: ${s.benefit.replace(/[🏥🏠💼👧🌾🛒😟📚🏪🤰📈💰💸📖💵]/g,'')}\n\nOFFICIAL WEBSITE: ${s.applyUrl}\n\nWHAT IS IT?\n${s.desc}\n\nWHO CAN APPLY?\n${s.eligibility.map((e,i)=>`${i+1}. ${e}`).join('\n')}\n\nREAL STORY\n${s.story.replace(/<[^>]*>/g,'')}\n\nWHY PEOPLE GET REJECTED\n${s.rejections.map((r,i)=>`${i+1}. ${r}`).join('\n')}\n\n${'='.repeat(50)}\nSchemeSaathi – Government Schemes Made Easy\nFor India, by India 🇮🇳`;
+  const blob = new Blob([content], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = s.shortTitle.replace(/\s+/g,'-') + '-guide.txt';
+  a.click();
+  showToast('📄 Guide downloaded!');
+}
+
+function shareWhatsApp() {
+  if (!currentScheme) return;
+  const s = currentScheme;
+  const text = encodeURIComponent(`🇮🇳 *${s.title}*\n\n${s.simpleDesc.replace(/<[^>]*>/g,'')}\n\n*Benefit:* ${s.benefit.replace(/[📈💰💸📖💵]/g,'')}\n\n*Apply here:* ${s.applyUrl}\n\nFind more schemes at SchemeSaathi!`);
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+init();
+startChecker();
+</script>
+</body>
+</html>
